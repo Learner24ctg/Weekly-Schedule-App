@@ -1,0 +1,65 @@
+import React, { useState } from "react";
+
+const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+const ScheduleApp = () => {
+  const [schedule, setSchedule] = useState([]);
+  const [form, setForm] = useState({ day: "Monday", time: "", subject: "" });
+
+  const addClass = () => {
+    if (form.time && form.subject) {
+      setSchedule([...schedule, form]);
+      setForm({ day: "Monday", time: "", subject: "" });
+    }
+  };
+
+  const deleteClass = (index) => {
+    setSchedule(schedule.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="p-6 max-w-2xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Weekly Class Schedule</h1>
+      <div className="mb-4 p-4 border rounded">
+        <select className="p-2 border rounded mr-2" value={form.day} onChange={(e) => setForm({ ...form, day: e.target.value })}>
+          {days.map((day) => (
+            <option key={day} value={day}>{day}</option>
+          ))}
+        </select>
+        <input
+          type="time"
+          className="p-2 border rounded mr-2"
+          value={form.time}
+          onChange={(e) => setForm({ ...form, time: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Subject"
+          className="p-2 border rounded mr-2"
+          value={form.subject}
+          onChange={(e) => setForm({ ...form, subject: e.target.value })}
+        />
+        <button className="p-2 bg-blue-500 text-white rounded" onClick={addClass}>Add</button>
+      </div>
+      <div>
+        {days.map((day) => (
+          <div key={day} className="mb-4">
+            <h2 className="text-xl font-semibold mb-2">{day}</h2>
+            <ul>
+              {schedule
+                .filter((entry) => entry.day === day)
+                .map((entry, index) => (
+                  <li key={index} className="flex justify-between items-center p-2 border rounded mb-2">
+                    <span>{entry.time} - {entry.subject}</span>
+                    <button className="p-1 bg-red-500 text-white rounded" onClick={() => deleteClass(index)}>Delete</button>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default ScheduleApp;
